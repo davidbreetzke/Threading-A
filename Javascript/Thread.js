@@ -135,8 +135,14 @@ Thread.prototype.hideThread = function(HideThreadRequest) {
         console.log("Thread is already hidden.")
         return false;
     }
-    else{
-        threadToHide.isHidden = true;
+    else {
+        if(this.children.length > 0)
+        {
+            for(var i = 0; i < threadToHide.children.length; i++)
+            {
+                threadToHide.children[i].isHidden = true;
+            }
+        }
         return threadToHide.isHidden;
     }
 };
