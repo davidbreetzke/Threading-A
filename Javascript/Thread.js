@@ -5,6 +5,8 @@
 
 //var Authorization = require("./Authorization");
 var MoveThreadRequest = require("./MoveThreadRequest");
+var SubmitPostRequest = require("./SubmitPostRequest");
+var SubmitPostResults = require("./SubmitPostResult");
 
 //! Public
 module.exports = Thread;
@@ -15,7 +17,10 @@ function Thread(post, buzzSpace) {
     this.children = [];
     this.buzzSpace = buzzSpace;
     this.threadSummary = null;
-    this.hidden = false;
+    this.creatorsId=null;
+    this.threadId=null;
+    this.isHidden=false;
+    this.isClosed=false;
 };
 
 function Thread(post, buzzSpace, parent) { //TODO: Add relevent function parameters and class variables
@@ -24,7 +29,10 @@ function Thread(post, buzzSpace, parent) { //TODO: Add relevent function paramet
     this.children = [];
     this.buzzSpace = buzzSpace;
     this.threadSummary = null;
-    this.hidden = false;
+    this.creatorsId=null;
+    this.isHidden=parent.isHidden;
+    this.isClosed=parent.isClosed;
+    this.threadId=null;
 };
 
 Thread.prototype.addChild = function(newChild) {
@@ -37,14 +45,56 @@ Thread.prototype.addSummary = function() {
 }
 
 /*! Aluwani */
-Thread.prototype.submitPost = function() { //TODO: Add Request object as function parameter  (E.g. submitPostRequest)
-};
 
-/*! jandre */
-Thread.prototype.closeThread = function() { //TODO: Add Request object as function parameter
+Thread.prototype.submitPost = function(submitPostRequest) { //TODO: Add Request object as function parameter  (E.g. submitPostRequest)
+
+    //TODO: Confirm correct parameters to be passed to isAuthorized
+    var isAuthorized = new Authorization().isAuthorized(new isAuthorizedRequest(submitPostRequest.userid,submitPostRequest.threadToPostIn.buzzSpace)); //TODO: Double check how the isAuthorized function returns (object or plain boolean?)
+    if(!isAuthorized) { //! User is not authorized to make a post in this current space/thread
+        console.log("Insufficient Permissions");
+
+        return new SubmitPostResults('Insufficient Permissions');
+    }
+
+    if(this.getThread(threadToPostIn.threadId)==null) { //! Thread no longer exist
+        console.log("Thread no longer exist");
+
+        return new SubmitPostResults('Thread no longer exist');
+    }
+
+    if(submitPostRequest.threadToPostIn.isHidden) { //! check if parent thread is hidden
+        console.log('The thread you are trying to post in is hidden');
+
+        return new SubmitPostResults('The thread you are trying to post in is hidden');
+    }
+    else if(submitPostRequest.threadToPostIn.isClosed) { //check if parent thread is closed
+        console.log('The thread you are trying to post in is closed');
+
+        return new SubmitPostResults('The thread you are trying to post in is closed');
+    }
+
+
+
+
+
+    this.post = submitPostRequest.newPost;
+    this.parent =  submitPostRequest.threadToPostIn;
+    this.children = [];
+    this.buzzSpace = threadToPostIn.buzzSpace;
+    this.creatorsId=submitPostRequest.userid;
+    this.threadSummary = null;
+    this.threadId=submitPostRequest.newThreadId;
+
+
+
+    return new SubmitPostResults('Post was successfully made!');
 };
 
 /*! David */
+Thread.prototype.closeThread = function() { //TODO: Add Request object as function parameter
+};
+
+/*! Jandre */
 Thread.prototype.hideThread = function() { //TODO: Add Request object as function parameter
 };
 
