@@ -7,6 +7,7 @@
 var MoveThreadRequest = require("./MoveThreadRequest");
 var SubmitPostRequest = require("./SubmitPostRequest");
 var SubmitPostResults = require("./SubmitPostResult");
+var CloseThreadRequest = require("./CloseThreadRequest");
 
 //! Public
 module.exports = Thread;
@@ -90,11 +91,32 @@ Thread.prototype.submitPost = function(submitPostRequest) { //TODO: Add Request 
     return new SubmitPostResults('Post was successfully made!');
 };
 
-/*! David */
-Thread.prototype.closeThread = function() { //TODO: Add Request object as function parameter
+/*! Jandre */
+Thread.prototype.closeThread = function(CloseThreadRequest) {
+
+    threadToClose = CloseThreadRequest.threadToClose;
+    userid = CloseThreadRequest.userid;
+
+    var isAuthorized = new Authorization().isAuthorized(new isAuthorizedRequest(userid));
+    if(isAuthorized){
+      Object.freeze(threadToClose.parent);
+      if(this.children.length > 0)
+      {
+          for(var i = 0; i < threadToClose.parent.children.length; i++)
+          {
+            Object.freeze(threadToClose.parent.children[i]);
+          }
+          //console.log("Closed Children");
+      }
+      console.log("Thread Closed");
+      threadToClose.isClosed = true;
+    }
+    else{
+      console.log("Insufficient Permissions");
+    }
 };
 
-/*! Jandre */
+/*! David */
 Thread.prototype.hideThread = function() { //TODO: Add Request object as function parameter
 };
 
@@ -165,5 +187,3 @@ Thread.prototype.getThread = function() { //! TODO: Add Request object as functi
 
 Thread.prototype.getPost = function() { //! TODO: Add Request object as function parameter
 };
-
-
