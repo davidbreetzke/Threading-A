@@ -15,6 +15,7 @@ function Thread(post, buzzSpace) {
     this.children = [];
     this.buzzSpace = buzzSpace;
     this.threadSummary = null;
+    this.hidden = false;
 };
 
 function Thread(post, buzzSpace, parent) { //TODO: Add relevent function parameters and class variables
@@ -23,6 +24,7 @@ function Thread(post, buzzSpace, parent) { //TODO: Add relevent function paramet
     this.children = [];
     this.buzzSpace = buzzSpace;
     this.threadSummary = null;
+    this.hidden = false;
 };
 
 Thread.prototype.addChild = function(newChild) {
