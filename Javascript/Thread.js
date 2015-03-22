@@ -5,8 +5,11 @@
 
 //var Authorization = require("./Authorization");
 var MoveThreadRequest = require("./MoveThreadRequest");
+<<<<<<< HEAD
 var SubmitPostRequest = require("./SubmitPostRequest");
 var SubmitPostResults = require("./SubmitPostResult");
+=======
+>>>>>>> origin/Jandre
 var CloseThreadRequest = require("./CloseThreadRequest");
 
 //! Public
