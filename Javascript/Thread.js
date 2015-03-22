@@ -24,7 +24,7 @@ function Thread(post, buzzSpace) {
     this.isClosed=false;
 };
 
-function Thread(post, buzzSpace, parent) { //TODO: Add relevent function parameters and class variables
+function Thread(post, buzzSpace, parent) { //TODO: Add relevant function parameters and class variables
     this.post = post;
     this.parent = parent;
     this.children = [];
@@ -117,7 +117,28 @@ Thread.prototype.closeThread = function(CloseThreadRequest) {
 };
 
 /*! David */
-Thread.prototype.hideThread = function() { //TODO: Add Request object as function parameter
+//Use Case is not clear about what params to pass, passing a request object to keep things standard
+Thread.prototype.hideThread = function(HideThreadRequest) {
+    threadToHide = HideThreadRequest.threadToHide;
+    userid = HideThreadRequest.userid;
+
+    //TODO: Confirm correct parameters to be passed to isAuthorized
+    //TODO: Find out how to check authorisation for moderator, not normal user
+    var isAuthorized = new Authorization().isAuthorized(new isAuthorizedRequest(userid));
+    //TODO: Double check how the isAuthorized function returns (object or plain boolean?)
+    if(!isAuthorized) { //! User is not authorized to move this thread
+        console.log("Insufficient Permissions");
+        return false;
+    }
+
+    if(threadToHide.isHidden) {
+        console.log("Thread is already hidden.")
+        return false;
+    }
+    else{
+        threadToHide.isHidden = true;
+        return threadToHide.isHidden;
+    }
 };
 
 /*! Matthew */
