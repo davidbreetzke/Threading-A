@@ -15,7 +15,6 @@ function Thread(post, buzzSpace) {
     this.children = [];
     this.buzzSpace = buzzSpace;
     this.threadSummary = null;
-    this.isClosed = false;
 };
 
 function Thread(post, buzzSpace, parent) { //TODO: Add relevent function parameters and class variables
@@ -24,7 +23,6 @@ function Thread(post, buzzSpace, parent) { //TODO: Add relevent function paramet
     this.children = [];
     this.buzzSpace = buzzSpace;
     this.threadSummary = null;
-    this.isClosed = false;
 };
 
 Thread.prototype.addChild = function(newChild) {
@@ -40,18 +38,11 @@ Thread.prototype.addSummary = function() {
 Thread.prototype.submitPost = function() { //TODO: Add Request object as function parameter  (E.g. submitPostRequest)
 };
 
-/*! David */
-Thread.prototype.closeThread = function(CloseThreadRequest) { //TODO: Add Request object as function parameter
-
-
-
-
-    CloseThreadRequest.threadToClose.isClosed = true;
-
-    return new CloseThreadResult(threadToClose.isClosed, CloseThreadRequest.userid);
+/*! jandre */
+Thread.prototype.closeThread = function() { //TODO: Add Request object as function parameter
 };
 
-/*! Jandre */
+/*! David */
 Thread.prototype.hideThread = function() { //TODO: Add Request object as function parameter
 };
 
