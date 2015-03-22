@@ -8,8 +8,8 @@ module.exports.SubmitPostResults=function(message) {
     this.message=message;
 
 }
-module.exports.getResults=function(message) {
+module.exports.getResults=function() {
 
-    return message;
+    return this.message;
 
 };
