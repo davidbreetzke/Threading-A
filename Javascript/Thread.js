@@ -38,11 +38,11 @@ Thread.prototype.addSummary = function() {
 Thread.prototype.submitPost = function() { //TODO: Add Request object as function parameter  (E.g. submitPostRequest)
 };
 
-/*! David */
+/*! jandre */
 Thread.prototype.closeThread = function() { //TODO: Add Request object as function parameter
 };
 
-/*! Jandre */
+/*! David */
 Thread.prototype.hideThread = function() { //TODO: Add Request object as function parameter
 };
 
