@@ -301,31 +301,3 @@ Thread.prototype.getPost = function() { //! TODO: Add Request object as function
 };
 
 module.exports = Thread;
-
-
-
-
-/*console.log("-- Tiny program to test functionality --");
-var MockBuzz = {
-    buzzSpaceId : "MockBuzzSpace",
-    rootThread : new Thread(new Post("text", "Root thread content", Date.now(), "Root Thread Title", "admin_user_post", "information"), "MockBuzzSpace")
-};
-MockBuzz.rootThread.saveThread();
-
-console.log("MockBuzz Root thread: " + MockBuzz.rootThread);
-
-var newSubmitPostRequest = {
-    threadToPostIn : MockBuzz.rootThread,
-    newPost: new Post("text", "I would like to ask a question?", Date.now(), "My Parent is Root", "lowerUser", "question"),
-    userId : "lowerUser",
-    buzzSpaceId : MockBuzz.buzzSpaceId
-};
-console.log("mock buzzSpace ID: " + newSubmitPostRequest.buzzSpaceId);
-console.log(newSubmitPostRequest.newPost);
-MockBuzz.rootThread.submitPost(newSubmitPostRequest);
-MockBuzz.rootThread.submitPost(newSubmitPostRequest);
-
-var foundThread = MockBuzz.rootThread.findThread(mongoose.Types.ObjectId("5514383f6a3a4c6414ffa18d"));
-console.log("found thread : " + foundThread.thread_SpaceID);
-
-*/
