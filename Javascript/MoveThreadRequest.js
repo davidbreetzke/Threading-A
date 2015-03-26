@@ -6,8 +6,10 @@
 //! Public
 module.exports = MoveThreadRequest;
 
-function MoveThreadRequest(threadToMove, newParent, userid) {
+function MoveThreadRequest(threadToMove, newParent, /*userid*/) {
     this.threadToMove = threadToMove;
     this.newParent = newParent;
-    this.userid = userid;
+    //this.userid = userid;
+	
+	return this;
 }
