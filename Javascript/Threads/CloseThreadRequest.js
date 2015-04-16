@@ -6,8 +6,7 @@
 //! Public
 module.exports = CloseThreadRequest;
 
-function CloseThreadRequest(threadToClose, userid)
+function CloseThreadRequest(threadToClose)
 {
     this.threadToClose = threadToClose;
-    this.userid = userid;
 }

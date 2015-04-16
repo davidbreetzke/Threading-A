@@ -6,7 +6,8 @@
 // commented out until modules are completed and required
 //var Authorization = require("./Authorization");
 //var MoveThreadRequest = require("./MoveThreadRequest");
-//var CloseThreadRequest = require("./CloseThreadRequest");
+var CloseThreadRequest = require("./CloseThreadRequest");
+var UnCloseThreadRequest = require("./UnCloseThreadRequest");
 var SubmitPostRequest = require("./SubmitPostRequest");
 var SubmitPostResults = require("./SubmitPostResult");
 var Post = require("./Post.js");
@@ -181,25 +182,20 @@ Thread.prototype.submitPost = function(submitPostRequest) { //TODO: Add Request 
 Thread.prototype.closeThread = function(CloseThreadRequest) {
 
     threadToClose = CloseThreadRequest.threadToClose;
-    userid = CloseThreadRequest.userid;
 
-    var isAuthorized = new Authorization().isAuthorized(new isAuthorizedRequest(userid));
-    if(isAuthorized){
-        Object.freeze(threadToClose.parent);
-        if(this.children.length > 0)
+    threadToClose.isClosed = true;
+    Object.freeze(threadToClose);
+    if(threadToClose.children.length > 0)
+    {
+        for(var i = 0; i < threadToClose.children.length; i++)
         {
-            for(var i = 0; i < threadToClose.parent.children.length; i++)
-            {
-                Object.freeze(threadToClose.parent.children[i]);
-            }
-            //console.log("Closed Children");
+            Object.freeze(threadToClose.children[i]);
+            console.log("Closed Children");
         }
-        console.log("Thread Closed");
-        threadToClose.isClosed = true;
+
     }
-    else{
-        console.log("Insufficient Permissions");
-    }
+    Object.freeze(threadToClose.post);
+    console.log("Thread Closed");
 };
 
 /*! Matthew */
@@ -273,7 +269,51 @@ Thread.prototype.toString = function() {
 };
 
 /*! Future functions to be delegated and implemented */
-Thread.prototype.uncloseThread = function() { //! TODO: Add Request object as function parameter
+/*! Jandre */
+Thread.prototype.uncloseThread = function(UnCloseThreadRequest)
+{
+      threadToUnClose = UnCloseThreadRequest.threadToUnClose;
+
+      Object.unfreeze=function(o)
+      {
+           var oo=undefined;
+
+           if(typeof o == 'object')
+           {
+          		oo={};
+              unlockedPost={};
+
+          		for (var property in o)
+          		{
+                  oo[property] = o[property];
+
+                  if(property == "children")
+                  {
+                      if(threadToUnClose.children.length > 0)
+                      {
+                          unlockedChildren=[];
+                          var clone=function(v)
+                          {unlockedChildren.push(v)};
+                          o.children.forEach(clone);
+                      }
+                      oo.children = unlockedChildren;
+                  }
+
+                  if(property == "post")
+                  {
+                      for (var property in o.post)
+                      {
+                        unlockedPost[property] = o.post[property];
+                      }
+                      oo.post = unlockedPost;
+                  }
+          		}
+           }
+           oo.isClosed = false;
+           return oo;
+      }
+      threadToUnClose = Object.unfreeze(threadToUnClose);
+      return threadToUnClose;
 };
 
 Thread.prototype.summarizeThread = function() { //! TODO: Add Request object as function parameter
