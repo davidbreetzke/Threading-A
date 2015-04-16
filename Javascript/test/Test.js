@@ -3,6 +3,7 @@ var Post = require("../Threads/Post.js");
 var Thread = require("../Threads/Thread.js");
 var CloseThreadRequest = require("../Threads/CloseThreadRequest");
 var UnCloseThreadRequest = require("../Threads/UnCloseThreadRequest");
+var MoveThreadRequest = require("../Threads/MoveThreadRequest");
 var mongoose = require("mongoose");
 
 describe('Unit Tests for Threads', function()
@@ -131,4 +132,58 @@ describe('Unit Tests for Threads', function()
           .hasMessage('Whoops!');
     });
 
+    it('Testing moving child from one parent to another', function() {
+        console.log("\n--------------------------------------");
+        console.log("Setting up MockBuzz...");
+        var MockBuzz2 = {
+            buzzSpaceId : "MockBuzzSpace",
+            rootThread : new Thread(new Post("text", "Root thread content", Date.now(), "Root Thread Title", "admin_user_post", "information"), "MockBuzzSpace")
+        };
+
+        console.log("Creating parents and child thread for testing...");
+        var submitPostRequest1 = {
+            threadToPostIn : MockBuzz2.rootThread,
+            newPost: new Post("text", "This is parent 1's post", Date.now(), "My parent is Root", "tester1", "information"),
+            userId : "tester1",
+            buzzSpaceId : MockBuzz2.buzzSpaceId
+        };
+        var submitPostRequest2 = {
+            threadToPostIn : MockBuzz2.rootThread,
+            newPost: new Post("text", "This is parent 2's post", Date.now(), "My parent is Root", "tester2", "information"),
+            userId : "tester2",
+            buzzSpaceId : MockBuzz2.buzzSpaceId
+        };
+        var submitPostRequest3 = {
+            threadToPostIn : MockBuzz2.rootThread,
+            newPost: new Post("text", "This is child 1's post", Date.now(), "My parent will change", "tester3", "information"),
+            userId : "tester3",
+            buzzSpaceId : MockBuzz2.buzzSpaceId
+        };
+
+
+        MockBuzz2.rootThread.submitPost(submitPostRequest1);
+        MockBuzz2.rootThread.submitPost(submitPostRequest2);
+
+        var thread1 = MockBuzz2.rootThread.children[0];
+        var thread2 = MockBuzz2.rootThread.children[1];
+
+        console.log("Adding thread3 to thread1's children...");
+        thread1.submitPost(submitPostRequest3);
+
+        var thread3 = thread1.children[0];
+
+        console.log("Checking that thread3's parent is in fact thread1...");
+        test.assert(thread1.children[0] === thread3);
+        test.assert(thread2.children.indexOf(thread3) < 0);
+        test.assert(thread3.parent === thread1);
+
+        console.log("Moving thread3 to thread2's children...");
+        MockBuzz2.rootThread.moveThread(new MoveThreadRequest(thread3, thread2));
+
+        console.log("Checking that thread3 was moved correctly...");
+        test.assert(thread1.children.indexOf(thread3) < 0);
+        test.assert(thread2.children[0] === thread3);
+        test.assert(thread3.parent === thread2);
+        console.log("--------------------------------------");
+    });
 });
