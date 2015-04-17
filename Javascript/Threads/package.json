@@ -2,12 +2,13 @@
   "name": "Threads",
   "main":, "threads.js"
   "version": "0.0.2",
+  "description": "Threads module of the Buzz system",
   "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/davidbreetzke/Threading-A"
   },
-  "contributors": {
+  "contributors": [
     {
       "name": "David Breetzke",
       "studentNumber": "u12056503"
@@ -24,7 +25,7 @@
       "name": "Matthew Russell",
       "studentNumber": "u12047822"
     }
-  },
+  ],
   "scripts": {},
   "dependencies": {
     "database": ">0.0.0",
