@@ -21,6 +21,7 @@ describe('Unit Tests for Threads', function()
       console.log("Test Post:");
 
       console.log("Create MockBuzz");
+      console.log("Checking that the post was created");
       MockBuzz = {
           buzzSpaceId : "MockBuzzSpace",
           rootThread : new Thread(new Post("text", "Root thread content", Date.now(), "Root Thread Title", "admin_user_post", "information"), "MockBuzzSpace")
@@ -55,6 +56,7 @@ describe('Unit Tests for Threads', function()
         };
 
       console.log("Post To Thread");
+      console.log("Checking that the post was created and that it is a child of the parent post");
       MockBuzz.rootThread.submitPost(newSubmitPostRequest);
 
       /*console.log("TTTTTTTTTTTT");
@@ -80,26 +82,26 @@ describe('Unit Tests for Threads', function()
     {
         console.log("");
         console.log("Test closeThread");
-
         var newCloseThreadRequest= {
           threadToClose : MockBuzz.rootThread
         };
 
         MockBuzz.rootThread.closeThread(newCloseThreadRequest);
 
-        MockBuzz.rootThread.buzzSpaceId = "MockBuzzSpaceChangedTo";
-        MockBuzz.rootThread.isClosed = false;
-        MockBuzz.rootThread.post.content = "Changed The Content";
+        console.log("Create Mock Post after thread has been closed");
+        var newSubmitPostRequest = {
+            threadToPostIn : MockBuzz.rootThread,
+            newPost: new Post("text", "I would like to ask a question?", Date.now(), "My Parent is Root", "lowerUser", "question"),
+            userId : "lowerUser",
+            buzzSpaceId : MockBuzz.buzzSpaceId
+          };
+        MockBuzz.rootThread.submitPost(newSubmitPostRequest);
+
+        console.log("Check to see that the post was unsuccessful");
 
       test
         .object(MockBuzz).hasProperty("buzzSpaceId", "MockBuzzSpace")
         .object(MockBuzz.rootThread).hasProperty("isClosed", true)
-        .object(MockBuzz.rootThread).hasProperty("_id", MockBuzz.rootThread._id)
-        .object(MockBuzz.rootThread.post).hasProperty("mimeType", "text")
-        .object(MockBuzz.rootThread.post).hasProperty("content", "Root thread content")
-        .object(MockBuzz.rootThread.post).hasProperty("title", "Root Thread Title")
-        .object(MockBuzz.rootThread.post).hasProperty("submitter", "admin_user_post")
-        .object(MockBuzz.rootThread.post).hasProperty("postType", "information")
         .error(trigger)
           .hasMessage('Whoops!');
     });
@@ -116,18 +118,26 @@ describe('Unit Tests for Threads', function()
 
         MockBuzz.rootThread = MockBuzz.rootThread.uncloseThread(newUnCloseThreadRequest);
 
-        console.log("Change The Content");
-        MockBuzz.rootThread.post.content = "Changed The Content";
+        console.log("Create Mock Post after thread has been unclosed");
+        var newSubmitPostRequest = {
+            threadToPostIn : MockBuzz.rootThread,
+            newPost: new Post("text", "Question?", Date.now(), "test post", "lowerUser", "question"),
+            userId : "lowerUser",
+            buzzSpaceId : MockBuzz.buzzSpaceId
+          };
+          MockBuzz.rootThread.submitPost(newSubmitPostRequest);
+
+        console.log("Added a new post");
 
       test
         .object(MockBuzz).hasProperty("buzzSpaceId", "MockBuzzSpace")
-        .object(MockBuzz.rootThread).hasProperty("isClosed", false)
-        .object(MockBuzz.rootThread).hasProperty("_id", MockBuzz.rootThread._id)
-        .object(MockBuzz.rootThread.post).hasProperty("mimeType", "text")
-        .object(MockBuzz.rootThread.post).hasProperty("content", "Changed The Content")
-        .object(MockBuzz.rootThread.post).hasProperty("title", "Root Thread Title")
-        .object(MockBuzz.rootThread.post).hasProperty("submitter", "admin_user_post")
-        .object(MockBuzz.rootThread.post).hasProperty("postType", "information")
+        .object(MockBuzz.rootThread.children[1].parent).hasProperty("_id", MockBuzz.rootThread._id)
+        .object(MockBuzz.rootThread.children[1]).hasProperty("_id", MockBuzz.rootThread.children[1]._id)
+        .object(MockBuzz.rootThread.children[1].post).hasProperty("mimeType", "text")
+        .object(MockBuzz.rootThread.children[1].post).hasProperty("content", "Question?")
+        .object(MockBuzz.rootThread.children[1].post).hasProperty("title", "test post")
+        .object(MockBuzz.rootThread.children[1].post).hasProperty("submitter", "lowerUser")
+        .object(MockBuzz.rootThread.children[1].post).hasProperty("postType", "question")
         .error(trigger)
           .hasMessage('Whoops!');
     });

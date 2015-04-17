@@ -169,9 +169,17 @@ Thread.prototype.submitPost = function(submitPostRequest) { //TODO: Add Request 
     //console.log("---------------------------" + tempThreadDoc.thread_SpaceID);
 
     // thread saved to database inside constructor
-    var newThread = new Thread(submitPostRequest.newPost, submitPostRequest.buzzSpaceId, this);
-    this.addChild(newThread);
-    newThread.saveThread();
+    currentThread = submitPostRequest.threadToPostIn;
+    if(currentThread.isClosed == false)
+    {
+      var newThread = new Thread(submitPostRequest.newPost, submitPostRequest.buzzSpaceId, this);
+      this.addChild(newThread);
+      newThread.saveThread();
+    }
+    else
+    {
+      return { message: "Post was unsuccessfully made! Thread is closed" };
+    }
 
     // next line of code did not work
     //return new SubmitPostResults('Post was successfully made!');
@@ -194,6 +202,7 @@ Thread.prototype.closeThread = function(CloseThreadRequest) {
         }
 
     }
+    Object.freeze(threadToClose.children);
     Object.freeze(threadToClose.post);
     console.log("Thread Closed");
 };
